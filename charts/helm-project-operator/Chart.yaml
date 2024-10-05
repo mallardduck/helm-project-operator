@@ -1,8 +1,8 @@
 apiVersion: v2
 name: helm-project-operator
 description: Helm Project Operator
-version: 0.2.1
-appVersion: 0.2.1
+version: 999
+appVersion: 999
 annotations:
   catalog.cattle.io/certified: rancher
   catalog.cattle.io/display-name: Helm Project Operator

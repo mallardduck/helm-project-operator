@@ -15,4 +15,4 @@ annotations:
   catalog.cattle.io/os: linux,windows
 maintainers:
   - email: dan.pock@suse.com
-    name: mallardduck
+    name: Dan Pock

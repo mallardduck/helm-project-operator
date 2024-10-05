@@ -1,4 +1,5 @@
 TARGETS := $(shell ls scripts)
+LOCAL_TARGETS := $(addprefix local-,$(TARGETS))
 
 .dapper:
 	@echo Downloading dapper
@@ -7,8 +8,13 @@ TARGETS := $(shell ls scripts)
 	@./.dapper.tmp -v
 	@mv .dapper.tmp .dapper
 
-$(TARGETS): .dapper
-	./.dapper $@
+# Default behavior for targets without dapper
+$(TARGETS):
+	@scripts/$@
+
+# Behavior for targets prefixed with "local-" using dapper
+$(LOCAL_TARGETS): local-%: .dapper
+	./.dapper $(@:local-%=%)
 
 .DEFAULT_GOAL := default
 

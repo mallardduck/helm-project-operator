@@ -35,6 +35,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name : Build, test & validate
         run : BUILD_TARGET=helm-locker make ci
+      - name : Package release helm charts
+        run : make package-helm
+      - run: mkdir -p ./build/artifacts/ && mv -v ./dist/artifacts/ ./build/
       - name: Extract metadata (tags, labels) for helm-locker image
         id: meta-locker
         uses: docker/metadata-action@v5
@@ -64,3 +67,11 @@ jobs:
           tags: ${{ steps.meta-hpo.outputs.tags }}
           labels: ${{ steps.meta-hpo.outputs.labels }}
           platforms: linux/amd64,linux/arm64
+      - uses: goreleaser/goreleaser-action@v6
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GORELEASER_CURRENT_TAG: ${{ github.ref_name }}

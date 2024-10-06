@@ -4,9 +4,13 @@ env:
   CGO_ENABLED: 0
   YQ_VERSION: v4.25.1
 
-on: [ pull_request ]
+on:
+  pull_request:
+  workflow_call:
+
 permissions:
   contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest

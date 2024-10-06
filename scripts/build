@@ -40,7 +40,7 @@ for A in "${ARCHES[@]}" ; do
 done
 
 cd bin
-ln -sf "${BIN_DEST}-$ARCH" "${BIN_DEST}"
+ln -sf "${BUILD_TARGET}-$ARCH" "${BUILD_TARGET}"
 cd ..
 
 echo "Build complete, binary at: \`"${BIN_DEST}"\`"

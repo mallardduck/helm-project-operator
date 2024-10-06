@@ -7,6 +7,11 @@ env:
 on:
   pull_request:
   workflow_call:
+    inputs:
+      skip_build:
+        default: 'false'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -34,7 +39,7 @@ jobs:
       - name: Perform CI
         run : make ci
   build-images:
-    if: ${{ github.event_name != 'workflow_call' }}
+    if: ${{ inputs.skip_build != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

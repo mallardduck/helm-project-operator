@@ -15,6 +15,8 @@ jobs:
     uses: ./.github/workflows/hl-ci.yaml
   helm-project-operator-ci:
     uses: ./.github/workflows/hpo-ci.yaml
+    with:
+      skip_build: 'true'
   goreleaser:
     name: Build go binaries and helm chart
     runs-on : ubuntu-latest

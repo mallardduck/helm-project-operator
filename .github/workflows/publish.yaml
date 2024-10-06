@@ -45,9 +45,11 @@ jobs:
           chmod 700 get_helm.sh
           ./get_helm.sh
           helm version
-      - name : Package release helm charts
-        run : make package-helm
-      - run : mkdir -p ./build/artifacts/ && mv -v ./dist/artifacts/ ./build/
+      - name: Package release helm charts
+        run: make package-helm
+      - run: mkdir -p ./build/artifacts/ && mv -v ./dist/artifacts/ ./build/
+      - name: Prepare embedded helm chart
+        run: make build-chart
       - uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser

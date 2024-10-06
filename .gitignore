@@ -9,3 +9,4 @@
 .idea
 /helm-project-operator
 /.vscode
+get_helm.sh

@@ -39,4 +39,8 @@ for A in "${ARCHES[@]}" ; do
   fi
 done
 
+cd bin
+ln -sf "${BIN_DEST}-$ARCH" "${BIN_DEST}"
+cd ..
+
 echo "Build complete, binary at: \`"${BIN_DEST}"\`"

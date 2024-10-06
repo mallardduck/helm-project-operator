@@ -8,6 +8,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  YQ_VERSION: v4.44.3
 
 jobs:
   helm-locker-ci:

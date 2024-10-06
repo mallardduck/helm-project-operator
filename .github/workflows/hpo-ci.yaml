@@ -2,7 +2,7 @@ name: "[helm-project-operator] ci"
 
 env:
   CGO_ENABLED: 0
-  YQ_VERSION: v4.25.1
+  YQ_VERSION: v4.44.3
 
 on:
   pull_request:

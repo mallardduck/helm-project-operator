@@ -4,12 +4,12 @@ package main
 
 import (
 	_ "embed"
+	common2 "github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/common"
+	"github.com/rancher/helm-project-operator/pkg/helm-project-operator/operator"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
 
-	"github.com/rancher/helm-project-operator/pkg/controllers/common"
-	"github.com/rancher/helm-project-operator/pkg/operator"
 	"github.com/rancher/helm-project-operator/pkg/version"
 	command "github.com/rancher/wrangler-cli"
 	_ "github.com/rancher/wrangler/pkg/generated/controllers/apiextensions.k8s.io"
@@ -38,7 +38,7 @@ var (
 
 type DummyOperator struct {
 	// Note: all Project Operator are expected to provide these RuntimeOptions
-	common.RuntimeOptions
+	common2.RuntimeOptions
 
 	Kubeconfig string `usage:"Kubeconfig file"`
 }
@@ -53,8 +53,8 @@ func (o *DummyOperator) Run(cmd *cobra.Command, _ []string) error {
 
 	ctx := cmd.Context()
 
-	if err := operator.Init(ctx, o.Namespace, cfg, common.Options{
-		OperatorOptions: common.OperatorOptions{
+	if err := operator.Init(ctx, o.Namespace, cfg, common2.Options{
+		OperatorOptions: common2.OperatorOptions{
 			HelmAPIVersion:   DummyHelmAPIVersion,
 			ReleaseName:      DummyReleaseName,
 			SystemNamespaces: DummySystemNamespaces,

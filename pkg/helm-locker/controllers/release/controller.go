@@ -9,7 +9,7 @@ import (
 	"github.com/rancher/helm-project-operator/pkg/helm-locker/objectset"
 	"github.com/rancher/helm-project-operator/pkg/helm-locker/objectset/parser"
 	"github.com/rancher/helm-project-operator/pkg/helm-locker/releases"
-	"github.com/rancher/helm-project-operator/pkg/helm-locker/remove"
+	"github.com/rancher/helm-project-operator/pkg/remove"
 	"github.com/rancher/lasso/pkg/controller"
 	corecontroller "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/rancher/wrangler/pkg/relatedresource"

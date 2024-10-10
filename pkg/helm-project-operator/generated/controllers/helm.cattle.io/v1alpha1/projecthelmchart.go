@@ -20,9 +20,9 @@ package v1alpha1
 
 import (
 	"context"
-	v1alpha2 "github.com/rancher/helm-project-operator/pkg/helm-project-operator/apis/helm.cattle.io/v1alpha1"
 	"time"
 
+	v1alpha1 "github.com/rancher/helm-project-operator/pkg/helm-project-operator/apis/helm.cattle.io/v1alpha1"
 	"github.com/rancher/lasso/pkg/client"
 	"github.com/rancher/lasso/pkg/controller"
 	"github.com/rancher/wrangler/pkg/apply"
@@ -41,7 +41,7 @@ import (
 	"k8s.io/client-go/tools/cache"
 )
 
-type ProjectHelmChartHandler func(string, *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error)
+type ProjectHelmChartHandler func(string, *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error)
 
 type ProjectHelmChartController interface {
 	generic.ControllerMeta
@@ -56,25 +56,25 @@ type ProjectHelmChartController interface {
 }
 
 type ProjectHelmChartClient interface {
-	Create(*v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error)
-	Update(*v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error)
-	UpdateStatus(*v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error)
+	Create(*v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error)
+	Update(*v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error)
+	UpdateStatus(*v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error)
 	Delete(namespace, name string, options *metav1.DeleteOptions) error
-	Get(namespace, name string, options metav1.GetOptions) (*v1alpha2.ProjectHelmChart, error)
-	List(namespace string, opts metav1.ListOptions) (*v1alpha2.ProjectHelmChartList, error)
+	Get(namespace, name string, options metav1.GetOptions) (*v1alpha1.ProjectHelmChart, error)
+	List(namespace string, opts metav1.ListOptions) (*v1alpha1.ProjectHelmChartList, error)
 	Watch(namespace string, opts metav1.ListOptions) (watch.Interface, error)
-	Patch(namespace, name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha2.ProjectHelmChart, err error)
+	Patch(namespace, name string, pt types.PatchType, data []byte, subresources ...string) (result *v1alpha1.ProjectHelmChart, err error)
 }
 
 type ProjectHelmChartCache interface {
-	Get(namespace, name string) (*v1alpha2.ProjectHelmChart, error)
-	List(namespace string, selector labels.Selector) ([]*v1alpha2.ProjectHelmChart, error)
+	Get(namespace, name string) (*v1alpha1.ProjectHelmChart, error)
+	List(namespace string, selector labels.Selector) ([]*v1alpha1.ProjectHelmChart, error)
 
 	AddIndexer(indexName string, indexer ProjectHelmChartIndexer)
-	GetByIndex(indexName, key string) ([]*v1alpha2.ProjectHelmChart, error)
+	GetByIndex(indexName, key string) ([]*v1alpha1.ProjectHelmChart, error)
 }
 
-type ProjectHelmChartIndexer func(obj *v1alpha2.ProjectHelmChart) ([]string, error)
+type ProjectHelmChartIndexer func(obj *v1alpha1.ProjectHelmChart) ([]string, error)
 
 type projectHelmChartController struct {
 	controller    controller.SharedController
@@ -98,11 +98,11 @@ func NewProjectHelmChartController(gvk schema.GroupVersionKind, resource string,
 
 func FromProjectHelmChartHandlerToHandler(sync ProjectHelmChartHandler) generic.Handler {
 	return func(key string, obj runtime.Object) (ret runtime.Object, err error) {
-		var v *v1alpha2.ProjectHelmChart
+		var v *v1alpha1.ProjectHelmChart
 		if obj == nil {
 			v, err = sync(key, nil)
 		} else {
-			v, err = sync(key, obj.(*v1alpha2.ProjectHelmChart))
+			v, err = sync(key, obj.(*v1alpha1.ProjectHelmChart))
 		}
 		if v == nil {
 			return nil, err
@@ -113,7 +113,7 @@ func FromProjectHelmChartHandlerToHandler(sync ProjectHelmChartHandler) generic.
 
 func (c *projectHelmChartController) Updater() generic.Updater {
 	return func(obj runtime.Object) (runtime.Object, error) {
-		newObj, err := c.Update(obj.(*v1alpha2.ProjectHelmChart))
+		newObj, err := c.Update(obj.(*v1alpha1.ProjectHelmChart))
 		if newObj == nil {
 			return nil, err
 		}
@@ -121,7 +121,7 @@ func (c *projectHelmChartController) Updater() generic.Updater {
 	}
 }
 
-func UpdateProjectHelmChartDeepCopyOnChange(client ProjectHelmChartClient, obj *v1alpha2.ProjectHelmChart, handler func(obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error)) (*v1alpha2.ProjectHelmChart, error) {
+func UpdateProjectHelmChartDeepCopyOnChange(client ProjectHelmChartClient, obj *v1alpha1.ProjectHelmChart, handler func(obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error)) (*v1alpha1.ProjectHelmChart, error) {
 	if obj == nil {
 		return obj, nil
 	}
@@ -177,18 +177,18 @@ func (c *projectHelmChartController) Cache() ProjectHelmChartCache {
 	}
 }
 
-func (c *projectHelmChartController) Create(obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error) {
-	result := &v1alpha2.ProjectHelmChart{}
+func (c *projectHelmChartController) Create(obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error) {
+	result := &v1alpha1.ProjectHelmChart{}
 	return result, c.client.Create(context.TODO(), obj.Namespace, obj, result, metav1.CreateOptions{})
 }
 
-func (c *projectHelmChartController) Update(obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error) {
-	result := &v1alpha2.ProjectHelmChart{}
+func (c *projectHelmChartController) Update(obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error) {
+	result := &v1alpha1.ProjectHelmChart{}
 	return result, c.client.Update(context.TODO(), obj.Namespace, obj, result, metav1.UpdateOptions{})
 }
 
-func (c *projectHelmChartController) UpdateStatus(obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error) {
-	result := &v1alpha2.ProjectHelmChart{}
+func (c *projectHelmChartController) UpdateStatus(obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error) {
+	result := &v1alpha1.ProjectHelmChart{}
 	return result, c.client.UpdateStatus(context.TODO(), obj.Namespace, obj, result, metav1.UpdateOptions{})
 }
 
@@ -199,13 +199,13 @@ func (c *projectHelmChartController) Delete(namespace, name string, options *met
 	return c.client.Delete(context.TODO(), namespace, name, *options)
 }
 
-func (c *projectHelmChartController) Get(namespace, name string, options metav1.GetOptions) (*v1alpha2.ProjectHelmChart, error) {
-	result := &v1alpha2.ProjectHelmChart{}
+func (c *projectHelmChartController) Get(namespace, name string, options metav1.GetOptions) (*v1alpha1.ProjectHelmChart, error) {
+	result := &v1alpha1.ProjectHelmChart{}
 	return result, c.client.Get(context.TODO(), namespace, name, result, options)
 }
 
-func (c *projectHelmChartController) List(namespace string, opts metav1.ListOptions) (*v1alpha2.ProjectHelmChartList, error) {
-	result := &v1alpha2.ProjectHelmChartList{}
+func (c *projectHelmChartController) List(namespace string, opts metav1.ListOptions) (*v1alpha1.ProjectHelmChartList, error) {
+	result := &v1alpha1.ProjectHelmChartList{}
 	return result, c.client.List(context.TODO(), namespace, result, opts)
 }
 
@@ -213,8 +213,8 @@ func (c *projectHelmChartController) Watch(namespace string, opts metav1.ListOpt
 	return c.client.Watch(context.TODO(), namespace, opts)
 }
 
-func (c *projectHelmChartController) Patch(namespace, name string, pt types.PatchType, data []byte, subresources ...string) (*v1alpha2.ProjectHelmChart, error) {
-	result := &v1alpha2.ProjectHelmChart{}
+func (c *projectHelmChartController) Patch(namespace, name string, pt types.PatchType, data []byte, subresources ...string) (*v1alpha1.ProjectHelmChart, error) {
+	result := &v1alpha1.ProjectHelmChart{}
 	return result, c.client.Patch(context.TODO(), namespace, name, pt, data, result, metav1.PatchOptions{}, subresources...)
 }
 
@@ -223,7 +223,7 @@ type projectHelmChartCache struct {
 	resource schema.GroupResource
 }
 
-func (c *projectHelmChartCache) Get(namespace, name string) (*v1alpha2.ProjectHelmChart, error) {
+func (c *projectHelmChartCache) Get(namespace, name string) (*v1alpha1.ProjectHelmChart, error) {
 	obj, exists, err := c.indexer.GetByKey(namespace + "/" + name)
 	if err != nil {
 		return nil, err
@@ -231,13 +231,13 @@ func (c *projectHelmChartCache) Get(namespace, name string) (*v1alpha2.ProjectHe
 	if !exists {
 		return nil, errors.NewNotFound(c.resource, name)
 	}
-	return obj.(*v1alpha2.ProjectHelmChart), nil
+	return obj.(*v1alpha1.ProjectHelmChart), nil
 }
 
-func (c *projectHelmChartCache) List(namespace string, selector labels.Selector) (ret []*v1alpha2.ProjectHelmChart, err error) {
+func (c *projectHelmChartCache) List(namespace string, selector labels.Selector) (ret []*v1alpha1.ProjectHelmChart, err error) {
 
 	err = cache.ListAllByNamespace(c.indexer, namespace, selector, func(m interface{}) {
-		ret = append(ret, m.(*v1alpha2.ProjectHelmChart))
+		ret = append(ret, m.(*v1alpha1.ProjectHelmChart))
 	})
 
 	return ret, err
@@ -246,26 +246,26 @@ func (c *projectHelmChartCache) List(namespace string, selector labels.Selector)
 func (c *projectHelmChartCache) AddIndexer(indexName string, indexer ProjectHelmChartIndexer) {
 	utilruntime.Must(c.indexer.AddIndexers(map[string]cache.IndexFunc{
 		indexName: func(obj interface{}) (strings []string, e error) {
-			return indexer(obj.(*v1alpha2.ProjectHelmChart))
+			return indexer(obj.(*v1alpha1.ProjectHelmChart))
 		},
 	}))
 }
 
-func (c *projectHelmChartCache) GetByIndex(indexName, key string) (result []*v1alpha2.ProjectHelmChart, err error) {
+func (c *projectHelmChartCache) GetByIndex(indexName, key string) (result []*v1alpha1.ProjectHelmChart, err error) {
 	objs, err := c.indexer.ByIndex(indexName, key)
 	if err != nil {
 		return nil, err
 	}
-	result = make([]*v1alpha2.ProjectHelmChart, 0, len(objs))
+	result = make([]*v1alpha1.ProjectHelmChart, 0, len(objs))
 	for _, obj := range objs {
-		result = append(result, obj.(*v1alpha2.ProjectHelmChart))
+		result = append(result, obj.(*v1alpha1.ProjectHelmChart))
 	}
 	return result, nil
 }
 
-type ProjectHelmChartStatusHandler func(obj *v1alpha2.ProjectHelmChart, status v1alpha2.ProjectHelmChartStatus) (v1alpha2.ProjectHelmChartStatus, error)
+type ProjectHelmChartStatusHandler func(obj *v1alpha1.ProjectHelmChart, status v1alpha1.ProjectHelmChartStatus) (v1alpha1.ProjectHelmChartStatus, error)
 
-type ProjectHelmChartGeneratingHandler func(obj *v1alpha2.ProjectHelmChart, status v1alpha2.ProjectHelmChartStatus) ([]runtime.Object, v1alpha2.ProjectHelmChartStatus, error)
+type ProjectHelmChartGeneratingHandler func(obj *v1alpha1.ProjectHelmChart, status v1alpha1.ProjectHelmChartStatus) ([]runtime.Object, v1alpha1.ProjectHelmChartStatus, error)
 
 func RegisterProjectHelmChartStatusHandler(ctx context.Context, controller ProjectHelmChartController, condition condition.Cond, name string, handler ProjectHelmChartStatusHandler) {
 	statusHandler := &projectHelmChartStatusHandler{
@@ -297,7 +297,7 @@ type projectHelmChartStatusHandler struct {
 	handler   ProjectHelmChartStatusHandler
 }
 
-func (a *projectHelmChartStatusHandler) sync(key string, obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error) {
+func (a *projectHelmChartStatusHandler) sync(key string, obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error) {
 	if obj == nil {
 		return obj, nil
 	}
@@ -344,12 +344,12 @@ type projectHelmChartGeneratingHandler struct {
 	name  string
 }
 
-func (a *projectHelmChartGeneratingHandler) Remove(key string, obj *v1alpha2.ProjectHelmChart) (*v1alpha2.ProjectHelmChart, error) {
+func (a *projectHelmChartGeneratingHandler) Remove(key string, obj *v1alpha1.ProjectHelmChart) (*v1alpha1.ProjectHelmChart, error) {
 	if obj != nil {
 		return obj, nil
 	}
 
-	obj = &v1alpha2.ProjectHelmChart{}
+	obj = &v1alpha1.ProjectHelmChart{}
 	obj.Namespace, obj.Name = kv.RSplit(key, "/")
 	obj.SetGroupVersionKind(a.gvk)
 
@@ -359,7 +359,7 @@ func (a *projectHelmChartGeneratingHandler) Remove(key string, obj *v1alpha2.Pro
 		ApplyObjects()
 }
 
-func (a *projectHelmChartGeneratingHandler) Handle(obj *v1alpha2.ProjectHelmChart, status v1alpha2.ProjectHelmChartStatus) (v1alpha2.ProjectHelmChartStatus, error) {
+func (a *projectHelmChartGeneratingHandler) Handle(obj *v1alpha1.ProjectHelmChart, status v1alpha1.ProjectHelmChartStatus) (v1alpha1.ProjectHelmChartStatus, error) {
 	if !obj.DeletionTimestamp.IsZero() {
 		return status, nil
 	}

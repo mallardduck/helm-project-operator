@@ -10,7 +10,7 @@ import (
 
 	"github.com/rancher/helm-project-operator/pkg/helm-locker/controllers"
 	"github.com/rancher/helm-project-operator/pkg/helm-locker/crd"
-	"github.com/rancher/helm-project-operator/pkg/helm-locker/version"
+	"github.com/rancher/helm-project-operator/pkg/version"
 	command "github.com/rancher/wrangler-cli"
 	_ "github.com/rancher/wrangler/pkg/generated/controllers/apiextensions.k8s.io"
 	_ "github.com/rancher/wrangler/pkg/generated/controllers/networking.k8s.io"

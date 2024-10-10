@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	common2 "github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/common"
+	"github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/common"
 	"github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/hardened"
 	"github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/namespace"
 	"github.com/rancher/helm-project-operator/pkg/helm-project-operator/controllers/project"
@@ -76,7 +76,7 @@ func (a *appContext) start(ctx context.Context) error {
 }
 
 // Register registers all controllers for the Helm Project Operator based on the provided options
-func Register(ctx context.Context, systemNamespace string, cfg clientcmd.ClientConfig, opts common2.Options) error {
+func Register(ctx context.Context, systemNamespace string, cfg clientcmd.ClientConfig, opts common.Options) error {
 	if len(systemNamespace) == 0 {
 		return errors.New("cannot start controllers on system namespace: system namespace not provided")
 	}
@@ -104,7 +104,7 @@ func Register(ctx context.Context, systemNamespace string, cfg clientcmd.ClientC
 	})
 
 	if !opts.DisableHardening {
-		hardeningOpts, err := common2.LoadHardeningOptionsFromFile(opts.HardeningOptionsFile)
+		hardeningOpts, err := common.LoadHardeningOptionsFromFile(opts.HardeningOptionsFile)
 		if err != nil {
 			return err
 		}
@@ -140,7 +140,7 @@ func Register(ctx context.Context, systemNamespace string, cfg clientcmd.ClientC
 		opts.ControllerName = "helm-project-operator"
 	}
 
-	valuesOverride, err := common2.LoadValuesOverrideFromFile(opts.ValuesOverrideFile)
+	valuesOverride, err := common.LoadValuesOverrideFromFile(opts.ValuesOverrideFile)
 	if err != nil {
 		return err
 	}
@@ -227,7 +227,7 @@ func controllerFactory(rest *rest.Config) (controller.SharedControllerFactory, e
 	}), nil
 }
 
-func newContext(cfg clientcmd.ClientConfig, systemNamespace string, opts common2.Options) (*appContext, error) {
+func newContext(cfg clientcmd.ClientConfig, systemNamespace string, opts common.Options) (*appContext, error) {
 	client, err := cfg.ClientConfig()
 	if err != nil {
 		return nil, err
